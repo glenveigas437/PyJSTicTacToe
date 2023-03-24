@@ -10,11 +10,10 @@ class Board:
     def getBlockPositionInTheBoard(self, block):
         return (block-1)//3, (block-1)%3
 
-    def placeOnBoard(self, block, value, player):
-        row, col = self.getBlockPositionInTheBoard(block)
+    def placeOnBoard(self, row, col, value, player):
         self.board[row][col].vacant=False
         self.board[row][col].currentValue=value
-        self.board[row][col].placedBy=player.name
+        self.board[row][col].placedBy=player['name']
     
     def undoPlacementOnTheCell(self, block):
         row, col = self.getBlockPositionInTheBoard(block)
@@ -32,6 +31,3 @@ class Board:
             if row!=2:
                 print("_____________")
             print(" ")
-
-b=Board()
-b.printGameBoard()
