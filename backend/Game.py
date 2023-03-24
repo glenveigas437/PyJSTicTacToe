@@ -61,20 +61,6 @@ class Game:
         
         return True
     
-    def playerMoving(self, player, symbol):
-        playerMove = int(input(f"Enter the block number to place {symbol} in any of the vacant Positions: "))
-        currentPlayerMoveCheck = self.checkPlayerMoveValidity(playerMove)
-        while(not currentPlayerMoveCheck):
-            if(player.foulPlay<=2):
-                self.penalisePlayer(player)
-                
-            if player.foulPlay==3:
-                return -1
-                
-            playerMove = int(input(f"Enter the block number to place {symbol} in any of the vacant Positions: "))
-            currentPlayerMoveCheck = self.checkPlayerMoveValidity(playerMove)
-        
-        return playerMove
     
     def automatedMove(self, player, opponent, symbol):
         highestScore = -float('inf')
@@ -134,81 +120,57 @@ class Game:
             return bestScore
     
     def beginGame(self, player1, player2):
-        gameMoves = 0
-        while(gameMoves<9):
-            if gameMoves==0:
-                self.gameBoard.printGameBoard()
-
-            if player1.name!='CPU':
-                player1Move=self.playerMoving(player1, 'X')
-
-                if player1Move==-1:
-                    self.winner = player2
-                    break
-            else:
-                player1Move = self.automatedMove(player1, player2, 'X')
-            
-            if self.winner == player2:
-                break
-
-            print('Player 1 Moved: ', player1Move)
-            self.gameBoard.placeOnBoard(player1Move, 'X', player1)
-
-            print("Game Board Now: ")
+        if gameMoves==0:
             self.gameBoard.printGameBoard()
-            gameMoves+=1
 
-            if gameMoves>=5:
-                if self.gameCheck('X'):
-                    self.winner = player1
-                    break
+        if player1['name']!='CPU':
+            player1Move=self.playerMoving(player1, 'X')
 
-            if gameMoves==9:
-                break      
-
-            if player2.name!='CPU':
-                player2Move=self.playerMoving(player2, '0')
-
-                if player2Move==-1:
-                    self.winner = player1
-                    break
-            else:
-                player2Move = self.automatedMove(player2, player1, '0')
-
-            if self.winner == player1:
+            if player1Move==-1:
+                self.winner = player2
                 break
-            
-            print('Player 2 Moved: ', player2Move)
-            self.gameBoard.placeOnBoard(player2Move, '0', player2)
-
-            print("Game Board Now: ")
-            self.gameBoard.printGameBoard()
-            gameMoves+=1
-
-            if gameMoves>=5:
-                if self.gameCheck('0'):
-                    self.winner = player2
-                    break
-
-
-    def main(self):
-        print("Enter Player1 Name. Leave blank for CPU: ")
-        player1Status = input()
-        player1 = Player('CPU', 'AI') if player1Status == '' else Player(player1Status, 'Human')
-        print("Enter Player2 Name. Leave blank for CPU: ")
-        player2Status = input()
-        player2 = Player('CPU', 'AI') if player2Status == '' else Player(player2Status, 'Human')
-        if player1.name == 'CPU' and player2.name == 'CPU':
-            while(player2.name=='CPU'):
-                player2Status = input()
-                player2 = Player('CPU', 'AI') if player2Status == '' else Player(player2Status, 'Human')
-        print (f"Game Between: {player1.name} AND {player2.name}")
-        self.beginGame(player1, player2)
-        if self.winner is not None:
-            print(f"Game has been won by {self.winner.name}")
-            if(self.checkedLine is not None):
-                print(f"Result: By Checking the {self.checkedLine} line")
-            else:
-                print(f"Due to illegal moves by the opposition player")
         else:
-            print("Game Tied")
+            player1Move = self.automatedMove(player1, player2, 'X')
+        
+        if self.winner == player2:
+            break
+
+        #print('Player 1 Moved: ', player1Move)
+        self.gameBoard.placeOnBoard(player1Move, 'X', player1)
+
+        print("Game Board Now: ")
+        self.gameBoard.printGameBoard()
+        gameMoves+=1
+
+        if gameMoves>=5:
+            if self.gameCheck('X'):
+                self.winner = player1
+                break
+
+        if gameMoves==9:
+            break      
+
+        if player2.name!='CPU':
+            player2Move=self.playerMoving(player2, '0')
+
+            if player2Move==-1:
+                self.winner = player1
+                break
+        else:
+            player2Move = self.automatedMove(player2, player1, '0')
+
+        if self.winner == player1:
+            break
+        
+        print('Player 2 Moved: ', player2Move)
+        self.gameBoard.placeOnBoard(player2Move, '0', player2)
+
+        print("Game Board Now: ")
+        self.gameBoard.printGameBoard()
+        gameMoves+=1
+
+        if gameMoves>=5:
+            if self.gameCheck('0'):
+                self.winner = player2
+                break
+
