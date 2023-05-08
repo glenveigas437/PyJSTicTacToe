@@ -13,7 +13,7 @@ class Board:
     def placeOnBoard(self, row, col, value, player):
         self.board[row][col].vacant=False
         self.board[row][col].currentValue=value
-        self.board[row][col].placedBy=player['name']
+        self.board[row][col].placedBy=player.name
     
     def undoPlacementOnTheCell(self, block):
         row, col = self.getBlockPositionInTheBoard(block)
